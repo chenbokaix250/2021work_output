@@ -1,0 +1,39 @@
+#host1 172.23.100.210  192.168.1.2
+#host2 172.23.100.205	192.168.1.3
+
+#TCP=5410 xdr
+# Buffers    
+# Name			Type		Host			size	neut?	      RPC#	       buffer#		MP    . . .
+B MessageA		SHMEM		192.168.1.3		1024	0		*		1001		*		50001	bsem=5421	TCP=5421 xdr
+B MessageB		SHMEM		192.168.1.3		1024	0		*		1002		*		50002	bsem=5422	TCP=5422 xdr
+B MessageC		SHMEM		192.168.1.2		1024	0		*		1003		*		50003	bsem=5423	TCP=5423 xdr
+
+
+
+#Process
+# Name			Buffer		Type		Host		       0ps		server?		      timeout		    master?		cnum
+# ModuleA
+P ModuleA		MessageA	LOCAL		192.168.1.3		R		0			0.1			1			1		waitformaster
+P ModuleA		MessageB	LOCAL		192.168.1.3		R		0			0.1			1			1		waitformaster
+P ModuleA		MessageC	REMOTE		192.168.1.3		W		0			0.1			1			1		waitformaster
+
+# ModuleB
+P ModuleB		MessageA	LOCAL		192.168.1.3		W		0			0.1			1			2		waitformaster
+P ModuleB		MessageB	LOCAL		192.168.1.3		W		0			0.1			1			2		waitformaster
+
+# ModuleC
+P ModuleC		MessageC	LOCAL		192.168.1.2		R		0			0.1			1			3		waitformaster
+
+
+
+
+
+#Server
+P ServerAsvr  	MessageC	LOCAL		192.168.1.2		RW		1			0.1			1			51
+
+
+
+
+
+
+
